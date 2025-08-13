@@ -2,7 +2,7 @@
   "name": "expense-tracker",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://user49324809.github.io/news-feed/",
+  "homepage": "https://user49324809.github.io/tracker/",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.4",
