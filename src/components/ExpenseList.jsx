@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import ExpenseForm from './ExpenseForm';
+import { getCategoryLabel } from '../categories';
+import { formatMoney } from '../formatMoney';
 function ExpenseList({ expenses, onDelete, onUpdate }) {
   const [editingId, setEditingId] = useState(null);
+  const formatDate = (date) => {
+    if (!date) return 'Дата не указана';
+    const [year, month, day] = date.split('-');
+    return `${day}.${month}.${year}`;
+  };
   if (!expenses.length) return <p className="empty">Нет расходов для отображения.</p>;
   return (
     <div className="expense-list">
@@ -10,16 +17,16 @@ function ExpenseList({ expenses, onDelete, onUpdate }) {
           <div className="main">
             <div className="title">{exp.title}</div>
             <div className="meta">
-              {exp.category} • {exp.date ? new Date(exp.date).toLocaleDateString() : 'Дата не указана'}
+              {getCategoryLabel(exp.category)} • {formatDate(exp.date)}
             </div>
           </div>
           <div className="right-cell">
             <div className="amount">
-              {typeof exp.amount === 'number' ? exp.amount.toLocaleString() : '0'} ₽
+              {formatMoney(exp.amount)}
             </div>
             <div className="actions-small">
-              <button onClick={() => setEditingId(editingId === exp.id ? null : exp.id)}>✏️</button>
-              <button onClick={() => { if(window.confirm('Удалить расход?')) onDelete(exp.id); }}>🗑️</button>
+              <button aria-label={`Редактировать расход «${exp.title}»`} title="Редактировать" onClick={() => setEditingId(editingId === exp.id ? null : exp.id)}>✏️</button>
+              <button aria-label={`Удалить расход «${exp.title}»`} title="Удалить" onClick={() => { if(window.confirm('Удалить расход?')) onDelete(exp.id); }}>🗑️</button>
             </div>
           </div>
           {editingId === exp.id && (
