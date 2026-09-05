@@ -5,6 +5,7 @@ import Summary from './components/Summary';
 import CategoryPieChart from './components/CategoryPieChart';
 import MonthlyLineChart from './components/MonthlyLineChart';
 const LS_KEY = 'expenses_v1';
+const createExpenseId = () => window.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
 function App() {
   const [expenses, setExpenses] = useState(() => {
     try {
@@ -20,7 +21,7 @@ function App() {
     localStorage.setItem(LS_KEY, JSON.stringify(expenses));
   }, [expenses]);
   const addExpense = (expense) => {
-    setExpenses(prev => [{ ...expense, id: Date.now() }, ...prev]);
+    setExpenses(prev => [{ ...expense, id: createExpenseId() }, ...prev]);
   };
   const updateExpense = (id, data) => {
     setExpenses(prev => prev.map(e => e.id === id ? { ...e, ...data } : e));
@@ -67,15 +68,15 @@ function App() {
           <ExpenseForm onSubmit={addExpense} />
           <div className="filter-row">
             <div className="filters">
-              <button className={filter.type==='all'?'active':''} onClick={() => setFilter({ type: 'all' })}>Все</button>
-              <button className={filter.type==='month'?'active':''} onClick={() => setFilter({ type: 'month' })}>Текущий месяц</button>
-              <button className={filter.type==='year'?'active':''} onClick={() => setFilter({ type: 'year' })}>Текущий год</button>
-              <button className={filter.type==='range'?'active':''} onClick={() => setFilter({ type: 'range' })}>Диапазон</button>
+              <button className={filter.type==='all'?'active':''} aria-pressed={filter.type === 'all'} onClick={() => setFilter({ type: 'all' })}>Все</button>
+              <button className={filter.type==='month'?'active':''} aria-pressed={filter.type === 'month'} onClick={() => setFilter({ type: 'month' })}>Текущий месяц</button>
+              <button className={filter.type==='year'?'active':''} aria-pressed={filter.type === 'year'} onClick={() => setFilter({ type: 'year' })}>Текущий год</button>
+              <button className={filter.type==='range'?'active':''} aria-pressed={filter.type === 'range'} onClick={() => setFilter({ type: 'range' })}>Диапазон</button>
             </div>
             {filter.type === 'range' && (
               <div className="range-inputs">
-                <input type="date" value={range.from} onChange={e => setRange(r => ({...r, from: e.target.value}))} />
-                <input type="date" value={range.to} onChange={e => setRange(r => ({...r, to: e.target.value}))} />
+                <input aria-label="Начало периода" type="date" value={range.from} onChange={e => setRange(r => ({...r, from: e.target.value}))} />
+                <input aria-label="Конец периода" type="date" value={range.to} onChange={e => setRange(r => ({...r, to: e.target.value}))} />
               </div>
             )}
           </div>

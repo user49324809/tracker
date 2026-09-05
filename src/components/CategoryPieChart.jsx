@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { getCategoryLabel } from '../categories';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 function CategoryPieChart({ expenses = [] }) {
@@ -13,7 +14,7 @@ function CategoryPieChart({ expenses = [] }) {
   }, [expenses]);
   const labels = Object.keys(byCategory);
   const data = {
-    labels,
+    labels: labels.map(getCategoryLabel),
     datasets: [
       {
         data: labels.map(l => byCategory[l]),
